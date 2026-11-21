@@ -1,0 +1,343 @@
+[
+  {
+    "caso": "CP01",
+    "categoria": "Rutinario",
+    "nombre": "Carga estable",
+    "agente": {
+      "peticiones": 16020,
+      "exitosas": 16020,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 69.40152629037921,
+      "intervalos_latencia_objetivo": 3,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.013500000000000002,
+      "cierre_final_proyectado_usd": 194.4,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    },
+    "fijo": {
+      "peticiones": 16020,
+      "exitosas": 16020,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 69.40152629037921,
+      "intervalos_latencia_objetivo": 3,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.013500000000000002,
+      "cierre_final_proyectado_usd": 194.4,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    }
+  },
+  {
+    "caso": "CP02",
+    "categoria": "Rutinario",
+    "nombre": "Descenso sostenido",
+    "agente": {
+      "peticiones": 25620,
+      "exitosas": 25620,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 58.45943987979797,
+      "intervalos_latencia_objetivo": 7,
+      "intervalos": 7,
+      "costo_intervalos_usd": 0.04025,
+      "cierre_final_proyectado_usd": 194.40875000000005,
+      "cambios": 2,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    },
+    "fijo": {
+      "peticiones": 25620,
+      "exitosas": 25620,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 58.21487687642324,
+      "intervalos_latencia_objetivo": 7,
+      "intervalos": 7,
+      "costo_intervalos_usd": 0.049,
+      "cierre_final_proyectado_usd": 302.40000000000003,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    }
+  },
+  {
+    "caso": "CP03",
+    "categoria": "Crítico",
+    "nombre": "Pico en el clúster web",
+    "agente": {
+      "peticiones": 57000,
+      "exitosas": 57000,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 96.37346769634046,
+      "intervalos_latencia_objetivo": 4,
+      "intervalos": 4,
+      "costo_intervalos_usd": 0.03183333333333333,
+      "cierre_final_proyectado_usd": 370.79750000000007,
+      "cambios": 1,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    },
+    "fijo": {
+      "peticiones": 57000,
+      "exitosas": 42060,
+      "disponibilidad_pct": 73.78947368421052,
+      "latencia_media_ms": 262.7795511155938,
+      "intervalos_latencia_objetivo": 1,
+      "intervalos": 4,
+      "costo_intervalos_usd": 0.024333333333333332,
+      "cierre_final_proyectado_usd": 262.8,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": false
+    }
+  },
+  {
+    "caso": "CP04",
+    "categoria": "Crítico",
+    "nombre": "Saturación de BD y tráfico no cacheable",
+    "agente": {
+      "peticiones": 29700,
+      "exitosas": 28777,
+      "disponibilidad_pct": 96.89225589225589,
+      "latencia_media_ms": 111.63685992396476,
+      "intervalos_latencia_objetivo": 3,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.025166666666666667,
+      "cierre_final_proyectado_usd": 385.19841666666673,
+      "cambios": 2,
+      "alertas": 0,
+      "objetivo_disponibilidad": false
+    },
+    "fijo": {
+      "peticiones": 29700,
+      "exitosas": 26931,
+      "disponibilidad_pct": 90.67676767676768,
+      "latencia_media_ms": 187.23928107538484,
+      "intervalos_latencia_objetivo": 3,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.021,
+      "cierre_final_proyectado_usd": 302.40000000000003,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": false
+    }
+  },
+  {
+    "caso": "CP05",
+    "categoria": "Crítico",
+    "nombre": "Saturación de BD con tráfico cacheable",
+    "agente": {
+      "peticiones": 41400,
+      "exitosas": 41400,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 82.77533820213705,
+      "intervalos_latencia_objetivo": 3,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.022000000000000002,
+      "cierre_final_proyectado_usd": 316.8,
+      "cambios": 1,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    },
+    "fijo": {
+      "peticiones": 41400,
+      "exitosas": 36360,
+      "disponibilidad_pct": 87.82608695652173,
+      "latencia_media_ms": 198.427262033134,
+      "intervalos_latencia_objetivo": 3,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.021,
+      "cierre_final_proyectado_usd": 302.40000000000003,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": false
+    }
+  },
+  {
+    "caso": "CP06",
+    "categoria": "Ambiguo",
+    "nombre": "CPU ausente o lectura desactualizada",
+    "agente": {
+      "peticiones": 32400,
+      "exitosas": 24240,
+      "disponibilidad_pct": 74.81481481481481,
+      "latencia_media_ms": 264.3227624742673,
+      "intervalos_latencia_objetivo": 0,
+      "intervalos": 2,
+      "costo_intervalos_usd": 0.0115,
+      "cierre_final_proyectado_usd": 248.4,
+      "cambios": 0,
+      "alertas": 2,
+      "objetivo_disponibilidad": false
+    },
+    "fijo": {
+      "peticiones": 32400,
+      "exitosas": 24240,
+      "disponibilidad_pct": 74.81481481481481,
+      "latencia_media_ms": 264.3227624742673,
+      "intervalos_latencia_objetivo": 0,
+      "intervalos": 2,
+      "costo_intervalos_usd": 0.0115,
+      "cierre_final_proyectado_usd": 248.4,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": false
+    }
+  },
+  {
+    "caso": "CP07",
+    "categoria": "Crítico",
+    "nombre": "Pico sin margen financiero",
+    "agente": {
+      "peticiones": 61800,
+      "exitosas": 29640,
+      "disponibilidad_pct": 47.96116504854369,
+      "latencia_media_ms": 590.324922507591,
+      "intervalos_latencia_objetivo": 1,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.013500000000000002,
+      "cierre_final_proyectado_usd": 194.4,
+      "cambios": 0,
+      "alertas": 7,
+      "objetivo_disponibilidad": false
+    },
+    "fijo": {
+      "peticiones": 61800,
+      "exitosas": 29640,
+      "disponibilidad_pct": 47.96116504854369,
+      "latencia_media_ms": 590.324922507591,
+      "intervalos_latencia_objetivo": 1,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.013500000000000002,
+      "cierre_final_proyectado_usd": 194.4,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": false
+    }
+  },
+  {
+    "caso": "CP08",
+    "categoria": "Ambiguo",
+    "nombre": "Tráfico oscilante",
+    "agente": {
+      "peticiones": 43320,
+      "exitosas": 43320,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 76.12909511159866,
+      "intervalos_latencia_objetivo": 6,
+      "intervalos": 6,
+      "costo_intervalos_usd": 0.036166666666666666,
+      "cierre_final_proyectado_usd": 262.79966666666667,
+      "cambios": 1,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    },
+    "fijo": {
+      "peticiones": 43320,
+      "exitosas": 43320,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 103.49913538431541,
+      "intervalos_latencia_objetivo": 6,
+      "intervalos": 6,
+      "costo_intervalos_usd": 0.0345,
+      "cierre_final_proyectado_usd": 248.4,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    }
+  },
+  {
+    "caso": "CP09",
+    "categoria": "Crítico",
+    "nombre": "Fallo y recuperación del actuador",
+    "agente": {
+      "peticiones": 34800,
+      "exitosas": 28920,
+      "disponibilidad_pct": 83.10344827586206,
+      "latencia_media_ms": 191.60941754732883,
+      "intervalos_latencia_objetivo": 1,
+      "intervalos": 2,
+      "costo_intervalos_usd": 0.014666666666666666,
+      "cierre_final_proyectado_usd": 370.7975,
+      "cambios": 1,
+      "alertas": 1,
+      "objetivo_disponibilidad": false
+    },
+    "fijo": {
+      "peticiones": 34800,
+      "exitosas": 23040,
+      "disponibilidad_pct": 66.20689655172414,
+      "latencia_media_ms": 327.96809895833337,
+      "intervalos_latencia_objetivo": 0,
+      "intervalos": 2,
+      "costo_intervalos_usd": 0.012166666666666666,
+      "cierre_final_proyectado_usd": 262.8,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": false
+    }
+  },
+  {
+    "caso": "CP10",
+    "categoria": "Crítico",
+    "nombre": "Tarifa alta cerca del cierre",
+    "agente": {
+      "peticiones": 14400,
+      "exitosas": 14400,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 57.940398000196055,
+      "intervalos_latencia_objetivo": 4,
+      "intervalos": 4,
+      "costo_intervalos_usd": 0.04591666666666667,
+      "cierre_final_proyectado_usd": 398.59825,
+      "cambios": 1,
+      "alertas": 5,
+      "objetivo_disponibilidad": true
+    },
+    "fijo": {
+      "peticiones": 14400,
+      "exitosas": 14400,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 57.940398000196055,
+      "intervalos_latencia_objetivo": 4,
+      "intervalos": 4,
+      "costo_intervalos_usd": 0.052250000000000005,
+      "cierre_final_proyectado_usd": 406.19191666666666,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    }
+  },
+  {
+    "caso": "CP11",
+    "categoria": "Ambiguo",
+    "nombre": "Latencia externa con baja utilización",
+    "agente": {
+      "peticiones": 14400,
+      "exitosas": 14400,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 365.625,
+      "intervalos_latencia_objetivo": 0,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.013500000000000002,
+      "cierre_final_proyectado_usd": 194.4,
+      "cambios": 0,
+      "alertas": 3,
+      "objetivo_disponibilidad": true
+    },
+    "fijo": {
+      "peticiones": 14400,
+      "exitosas": 14400,
+      "disponibilidad_pct": 100.0,
+      "latencia_media_ms": 365.625,
+      "intervalos_latencia_objetivo": 0,
+      "intervalos": 3,
+      "costo_intervalos_usd": 0.013500000000000002,
+      "cierre_final_proyectado_usd": 194.4,
+      "cambios": 0,
+      "alertas": 0,
+      "objetivo_disponibilidad": true
+    }
+  }
+]

@@ -1,0 +1,30 @@
+test_cp01_estable (test_finops.EscenariosFinOps.test_cp01_estable) ... ok
+test_cp02_histeresis_piso_y_ahorro (test_finops.EscenariosFinOps.test_cp02_histeresis_piso_y_ahorro) ... ok
+test_cp03_web_recupera_pico (test_finops.EscenariosFinOps.test_cp03_web_recupera_pico) ... ok
+test_cp04_base_de_datos_y_cache_inefectiva (test_finops.EscenariosFinOps.test_cp04_base_de_datos_y_cache_inefectiva) ... ok
+test_cp05_cache_efectiva (test_finops.EscenariosFinOps.test_cp05_cache_efectiva) ... ok
+test_cp06_telemetria_invalida (test_finops.EscenariosFinOps.test_cp06_telemetria_invalida) ... ok
+test_cp07_presupuesto_duro (test_finops.EscenariosFinOps.test_cp07_presupuesto_duro) ... ok
+test_cp08_sin_oscilacion_de_instancias (test_finops.EscenariosFinOps.test_cp08_sin_oscilacion_de_instancias) ... ok
+test_cp09_fallo_atomico_y_recuperacion (test_finops.EscenariosFinOps.test_cp09_fallo_atomico_y_recuperacion) ... ok
+test_cp10_reaccion_a_tarifas_y_gasto_acumulado (test_finops.EscenariosFinOps.test_cp10_reaccion_a_tarifas_y_gasto_acumulado) ... ok
+test_cp11_latencia_externa (test_finops.EscenariosFinOps.test_cp11_latencia_externa) ... ok
+test_no_presupuesto_adicional_al_fallar_sensores_o_repetir_muestra (test_finops.EscenariosFinOps.test_no_presupuesto_adicional_al_fallar_sensores_o_repetir_muestra) ... ok
+test_seleccion_maximiza_utilidad_en_conjunto_factible (test_finops.EscenariosFinOps.test_seleccion_maximiza_utilidad_en_conjunto_factible) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.024s
+
+OK
+CP01 Carga estable: 100.000% | 69.4 ms | cierre USD 194.40 | MANTENER, MANTENER, MANTENER
+CP02 Descenso sostenido: 100.000% | 58.5 ms | cierre USD 194.41 | MANTENER, MANTENER, APAGAR_WEB_1, MANTENER, MANTENER, APAGAR_WEB_1, MANTENER
+CP03 Pico en el clúster web: 100.000% | 96.4 ms | cierre USD 370.80 | MANTENER, ENCENDER_WEB_2, MANTENER, MANTENER
+CP04 Saturación de BD y tráfico no cacheable: 96.892% | 111.6 ms | cierre USD 385.20 | ACTIVAR_CACHE, ESCALAR_BD, MANTENER
+CP05 Saturación de BD con tráfico cacheable: 100.000% | 82.8 ms | cierre USD 316.80 | ACTIVAR_CACHE, MANTENER, MANTENER
+CP06 CPU ausente o lectura desactualizada: 74.815% | 264.3 ms | cierre USD 248.40 | MANTENER, MANTENER
+CP07 Pico sin margen financiero: 47.961% | 590.3 ms | cierre USD 194.40 | MANTENER, MANTENER, MANTENER
+CP08 Tráfico oscilante: 100.000% | 76.1 ms | cierre USD 262.80 | MANTENER, ACTIVAR_CACHE, MANTENER, MANTENER, MANTENER, MANTENER
+CP09 Fallo y recuperación del actuador: 83.103% | 191.6 ms | cierre USD 370.80 | MANTENER, ENCENDER_WEB_2
+CP10 Tarifa alta cerca del cierre: 100.000% | 57.9 ms | cierre USD 398.60 | MANTENER, MANTENER, APAGAR_WEB_1, MANTENER
+CP11 Latencia externa con baja utilización: 100.000% | 365.6 ms | cierre USD 194.40 | MANTENER, MANTENER, MANTENER
+Archivos de evidencia: evidencia/

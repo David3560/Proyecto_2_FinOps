@@ -1,0 +1,25 @@
+\begin{tikzpicture}[
+  font=\small\sffamily,
+  etapa/.style={draw=black!65, rounded corners=2pt, fill=black!4,
+    align=center, text width=10.2cm, minimum height=8.8mm, inner sep=3pt},
+  conex/.style={-{Stealth[length=2.1mm]}, line width=.6pt, draw=black!70},
+  node distance=4.2mm]
+\node[etapa] (entorno) {Entorno simulado · clúster, balanceador, base de datos y caché};
+\node[etapa, below=of entorno] (sensores) {Sensores · carga, latencia, disponibilidad, tarifas y gasto};
+\node[etapa, below=of sensores] (estado) {Validación y estado interno · tendencia, diagnóstico e histéresis};
+\node[etapa, below=of estado] (modelo) {Modelo de transición · proyecta el efecto de cada configuración};
+\node[etapa, below=of modelo] (utilidad) {Restricciones y utilidad · filtra candidatos y calcula $U$};
+\node[etapa, below=of utilidad] (decision) {Decisión · maximiza $U$ entre candidatos elegibles};
+\node[etapa, below=of decision] (actuadores) {Actuadores · aplican recursos o mantienen y emiten alertas};
+\node[etapa, below=of actuadores] (traza) {Medición posterior, facturación y registro de auditoría};
+\foreach \a/\b in {entorno/sensores,sensores/estado,estado/modelo,modelo/utilidad,
+  utilidad/decision,decision/actuadores,actuadores/traza}
+  \draw[conex] (\a) -- (\b);
+\draw[conex] (estado.west) -- ++(-.62,0)
+  |- (actuadores.west);
+\node[rotate=90, fill=white, inner sep=3pt] at ([xshift=-.62cm]estado.west |- utilidad.west)
+  {lectura inválida};
+\draw[conex] (traza.east) -- ++(1.03,0) |- (entorno.east);
+\node[rotate=90, fill=white, inner sep=3pt] at ([xshift=1.03cm]sensores.east |- utilidad.east)
+  {siguiente minuto};
+\end{tikzpicture}
