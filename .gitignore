@@ -3,3 +3,7 @@ __pycache__/
 *.aux
 *.log
 *.out
+
+# Salidas de casos individuales y archivos del sistema
+evidencia-*/
+.DS_Store
