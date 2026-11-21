@@ -86,7 +86,7 @@ def main():
             archivo.write(json.dumps(fila, ensure_ascii=False) + "\n")
     with (args.salida / "metricas.csv").open("w", encoding="utf-8-sig", newline="") as archivo:
         columnas = ["caso", "categoria", "nombre", "modo", *resumen[0]["agente"].keys()]
-        tabla = csv.DictWriter(archivo, fieldnames=columnas)
+        tabla = csv.DictWriter(archivo, fieldnames=columnas, lineterminator="\n")
         tabla.writeheader()
         for caso in resumen:
             for modo in ("agente", "fijo"):

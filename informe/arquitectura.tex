@@ -9,8 +9,8 @@
 \node[etapa, below=of sensores] (estado) {Validación y estado interno · tendencia, diagnóstico e histéresis};
 \node[etapa, below=of estado] (modelo) {Modelo de transición · proyecta el efecto de cada configuración};
 \node[etapa, below=of modelo] (utilidad) {Restricciones y utilidad · filtra candidatos y calcula $U$};
-\node[etapa, below=of utilidad] (decision) {Decisión · maximiza $U$ entre candidatos elegibles};
-\node[etapa, below=of decision] (actuadores) {Actuadores · aplican recursos o mantienen y emiten alertas};
+\node[etapa, below=of utilidad] (decision) {Decisión · maximiza $U$ entre candidatos conformes o, si no hay, entre los permitidos};
+\node[etapa, below=of decision] (actuadores) {Actuadores · aplican la configuración; si el entorno la rechaza, mantienen y alertan};
 \node[etapa, below=of actuadores] (traza) {Medición posterior, facturación y registro de auditoría};
 \foreach \a/\b in {entorno/sensores,sensores/estado,estado/modelo,modelo/utilidad,
   utilidad/decision,decision/actuadores,actuadores/traza}
