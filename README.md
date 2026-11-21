@@ -21,7 +21,7 @@ Para reproducir solo el conflicto presupuestario sin reemplazar la evidencia com
 | Criterio de la guía | Dónde verificarlo |
 | --- | --- |
 | PEAS y entorno (20 %) | Tabla 1 y formalización en el informe |
-| Arquitectura y TikZ (20 %) | Figura 1, `informe/arquitectura.tex` y ciclo en `finops/agente.py` |
+| Arquitectura y TikZ (20 %) | Figura 1, `informe/arquitectura.tex`, plantilla en `finops/plantilla.py` y ciclo en `finops/agente.py` |
 | Utilidad, pesos y penalizaciones (25 %) | Ecuaciones 1–4 y `finops/agente.py`, `finops/modelo.py` |
 | Implementación en Python (25 %) | `finops/`, `tests/` y scripts de ejecución |
 | Casos de prueba y métricas (10 %) | Tablas 2 y 3 y carpeta `evidencia/` |

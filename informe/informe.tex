@@ -56,7 +56,7 @@ Una aplicación web pierde capacidad de respuesta si un pico de tráfico supera 
 \toprule
 Componente & Aplicación en el laboratorio \\
 \midrule
-Performance & Disponibilidad por solicitudes $\geq 99{,}9\,\%$, latencia media $<200$ ms y menor gasto proyectado, sujeto al presupuesto de cada caso. \\
+Performance & Disponibilidad por solicitudes $\geq 99{,}9\,\%$ (objetivo académico de nivel de servicio, no un SLA contractual), latencia media $<200$ ms y menor gasto proyectado, sujeto al presupuesto de cada caso. \\
 Environment & Tráfico variable, balanceador, clúster de contenedores sobre instancias web, base de datos gestionada y caché. El simulador representa la capacidad de esos componentes. \\
 Actuators & Encender o apagar instancias web, aumentar un nivel de BD, activar o desactivar la caché y registrar alertas financieras u operativas. \\
 Sensors & CPU, RAM y utilización de BD en porcentaje, latencia media en ms, solicitudes por segundo (RPS), disponibilidad por solicitudes, tarifas en USD/h, gasto acumulado, horas restantes y antigüedad de la lectura. \\
@@ -66,19 +66,23 @@ Sensors & CPU, RAM y utilización de BD en porcentaje, latencia media en ms, sol
 \end{samepage}
 \vspace{.35\baselineskip}
 
-El entorno es \textbf{parcialmente observable}: las métricas agregadas ocultan la demanda futura y la proporción real de solicitudes cacheables. Es \textbf{no determinista desde la perspectiva operativa} porque el tráfico, los precios y los fallos pueden cambiar entre lecturas. Es \textbf{dinámico} y \textbf{secuencial}, pues cada acción altera el estado y el gasto futuro. Las decisiones se discretizan por minuto y las trazas de prueba son deterministas para facilitar su reproducción.
+El entorno es \textbf{parcialmente observable}: las métricas agregadas ocultan la demanda futura y la proporción real de solicitudes cacheables. Es \textbf{no determinista desde la perspectiva operativa} porque el tráfico, los precios y los fallos pueden cambiar entre lecturas. Es \textbf{dinámico} y \textbf{secuencial}, pues cada acción altera el estado y el gasto futuro. Es \textbf{monoagente}: un solo agente decide sobre todos los recursos. Las decisiones se discretizan por minuto y las trazas de prueba son deterministas para facilitar su reproducción.
 
 \newpage
 \niveluno{Arquitectura del agente}
 
-Un agente basado en utilidad permite comparar el estado futuro de varias configuraciones con una misma escala de decisión (Russell \& Norvig, 2021). Se eligió un modelo de transición explícito y auditable. El laboratorio emplea trazas sintéticas y parámetros fijos. La ventana de estabilización para reducir recursos toma como referencia el concepto documentado en Kubernetes (s. f.).
+Un agente basado en utilidad permite comparar el estado futuro de varias configuraciones con una misma escala de decisión (Russell y Norvig, 2021). Se eligió un modelo de transición explícito y auditable. El laboratorio emplea trazas sintéticas y parámetros fijos. La ventana de estabilización para reducir recursos toma como referencia el concepto documentado por The Kubernetes Authors (s. f.).
 
+El diseño combina la utilidad con restricciones duras: la validez de la lectura, la histéresis y el límite presupuestal se aplican como reglas antes de comparar utilidades. En ese sentido es un esquema híbrido de reglas y utilidad, pero sin un componente de aprendizaje. Se descartó el aprendizaje porque el laboratorio no dispone de datos históricos de tráfico ni de facturación para entrenarlo, y porque cada decisión debe poder explicarse a partir de sus proyecciones y puntajes, que quedan registrados en \texttt{traza.jsonl}.
+
+\noindent\begin{minipage}{\linewidth}
 \noindent\textbf{Figura 1}\par
 \noindent\textit{Flujo interno del agente de autoescalado}\par
 \begingroup\centering\input{arquitectura}\par\endgroup
 \noindent\small\textit{Nota.} Una lectura inválida conserva los recursos y emite una alerta. El registro incluye las proyecciones y la observación posterior a la actuación.\par\normalsize
+\end{minipage}\par\vspace{.6\baselineskip}
 
-La clase \texttt{AgenteFinOps} conserva la tendencia de RPS, las muestras bajas y el último cambio. Si el simulador rechaza la configuración, conserva los recursos y registra el intento. El agente vuelve a evaluar con la siguiente lectura.
+La clase \texttt{AgenteFinOps} hereda de \texttt{AgenteBasadoEnUtilidad}, la plantilla de la guía adaptada en \texttt{finops/plantilla.py}, e implementa sus cinco pasos: estado interno, proyección, utilidad, decisión y actuación. Conserva la tendencia de RPS, las muestras bajas y el último cambio. Si el simulador rechaza la configuración, conserva los recursos y registra el intento. El agente vuelve a evaluar con la siguiente lectura.
 
 \newpage
 \niveluno{Modelo de transición y presupuesto}
@@ -92,7 +96,7 @@ Sea $D=\max(r,\bar r_t)$, $f=\max(1,\bar r_t/\max(r,1))$ y $g(b)=1-0{,}45b$. Sea
  \frac{Dg(b')}{210d'},\;jf\frac d{d'}\frac{g(b')}{g(b)}\right\}.
 \end{equation}
 
-La notación $[x]_+=\max(x,0)$ indica la parte positiva. Con $\rho_0$ calculada para los recursos actuales usando $D=r$ y $f=1$, el residuo observado de latencia es $e_L=[L_{\mathrm{obs}}-55-95\rho_0^2]_+$. La latencia proyectada es $L(s)=55+95\rho(s)^2+e_L$ en milisegundos. La pérdida proyectada de solicitudes se aproxima con $p(x)=0{,}08\min(1,[x-0{,}85]_+)$ y la disponibilidad esperada es $A(s)=1-p(\rho(s))$. Son aproximaciones elegidas para comparar acciones.
+La notación $[x]_+=\max(x,0)$ indica la parte positiva. Con $\rho_0$ calculada para los recursos actuales usando $D=r$ y $f=1$, el residuo observado de latencia es $e_L=[L_{\mathrm{obs}}-55-95\rho_0^2]_+$. La latencia proyectada es $L(s)=55+95\rho(s)^2+e_L$ en milisegundos. La pérdida proyectada de solicitudes se aproxima con $p(x)=\max\{0{,}08\min(1,[x-0{,}85]_+),\,[1-1/x]_+\}$ y la disponibilidad esperada es $A(s)=1-p(\rho(s))$. El primer término penaliza la cercanía a la saturación; el segundo representa la fracción de solicitudes que no se atiende cuando la demanda supera la capacidad. Son aproximaciones elegidas para comparar acciones.
 
 El costo de cierre $C(s)$ extrapola el costo corriente durante las horas que quedan del mes. Con gasto acumulado $G$, horas restantes $H$ y tarifas por hora $t_w,t_d,t_b$, se usa
 \begin{equation}
@@ -103,7 +107,7 @@ El cargo fijo de USD 0,025/h corresponde al balanceador. Las tarifas iniciales s
 \newpage
 \niveluno{Función de utilidad y restricciones}
 
-Con presupuesto $B>0$, se define la utilidad adimensional en la Ec. 3. El beneficio por latencia se satura al llegar al objetivo, de modo que una reducción adicional no justifica por sí sola más gasto. El riesgo $R$ combina pérdida esperada en carga nominal (80\,\%) y en una situación con 15\,\% más presión (20\,\%). Cada pérdida se normaliza a partir del 2\,\% y se acota en 1.
+Con presupuesto $B>0$, se define la utilidad adimensional en la Ec. 3. El beneficio por latencia se satura al llegar al objetivo, de modo que una reducción adicional no justifica por sí sola más gasto. El riesgo $R$ combina pérdida esperada en carga nominal (80\,\%) y en una situación con 15\,\% más presión (20\,\%). Cada pérdida se divide entre 0,02 y se acota en 1, de modo que una pérdida del 2\,\% o mayor recibe la penalización máxima.
 \begin{align}
  U(s)&=0{,}30\min\!\left(1,\frac{200}{\max(L(s),1)}\right)
       -0{,}24\frac{C(s)}{B}-0{,}38R(s)-0{,}032M(s)-0{,}30E(s),\\
@@ -154,7 +158,7 @@ Las pruebas verifican decisiones, cambios reales de estado, alertas, restriccion
 \newpage
 \niveluno{Resultados de la simulación}
 
-La disponibilidad observada es $100$ veces el cociente entre solicitudes exitosas y ofrecidas. La latencia media se pondera por el número de respuestas exitosas y el cumplimiento de latencia se cuenta por intervalo. Los SLA suelen expresar compromisos formales, mientras que los SLO fijan objetivos medibles (Jones et al., 2016). El 99,9\,\% se usa aquí como objetivo medido en cada traza. El costo facturado por minuto y el cierre mensual proyectado son indicadores distintos.
+La disponibilidad observada es $100$ veces el cociente entre solicitudes exitosas y ofrecidas. La latencia media se pondera por el número de respuestas exitosas y el cumplimiento de latencia se cuenta por intervalo. Los SLA suelen expresar compromisos formales, mientras que los SLO fijan objetivos medibles (Jones et al., 2016). El 99,9\,\% se usa aquí como objetivo medido en cada traza de pocos minutos. Un SLA real se mide sobre un periodo contractual, normalmente un mes, en el que ese porcentaje equivale a unos 43,2 minutos de indisponibilidad admisible. El costo facturado por minuto y el cierre mensual proyectado son indicadores distintos.
 
 \noindent\textbf{Tabla 3}\par
 \noindent\textit{Indicadores del agente y de la capacidad fija}\par
@@ -176,21 +180,21 @@ En CP02, las reducciones conservaron el 100\,\% de disponibilidad y disminuyeron
 \newpage
 \niveluno{Discusión y conclusiones}
 
-Siete de las once trazas alcanzaron el objetivo de disponibilidad. Seis cumplieron también el umbral de latencia en todos sus intervalos. Los criterios de las trece pruebas se cumplieron, incluidos los que exigían observar una degradación o un bloqueo de seguridad. En CP07, el límite financiero impidió ampliar capacidad y la disponibilidad quedó en 47,96\,\%. El agente registró la necesidad de intervención mientras mantuvo el cierre proyectado en USD 194,40.
+Siete de las once trazas alcanzaron el objetivo de disponibilidad. Seis cumplieron también el umbral de latencia en todos sus intervalos. Los criterios de las trece pruebas automatizadas, once de escenario y dos transversales, se cumplieron, incluidos los que exigían observar una degradación o un bloqueo de seguridad. En CP07, el límite financiero impidió ampliar capacidad y la disponibilidad quedó en 47,96\,\%. El agente registró la necesidad de intervención mientras mantuvo el cierre proyectado en USD 194,40.
 
-En CP04, la primera estimación sobrevaloró la eficacia de la caché. La ampliación de BD recuperó el servicio desde el siguiente intervalo, aunque la disponibilidad acumulada quedó en 96,89\,\%. En CP06, la falta de telemetría válida mantuvo la configuración sin corregir la saturación. En CP09, la acción aplicada en el segundo intervalo recuperó las solicitudes de ese minuto. CP11 mantuvo el 100\,\% de disponibilidad, con 365,6 ms de latencia media por la demora externa.
+En CP04, la primera estimación sobrevaloró la eficacia de la caché. La ampliación de BD recuperó el servicio desde el siguiente intervalo, aunque la disponibilidad acumulada quedó en 96,89\,\%. En CP06, la falta de telemetría válida mantuvo la configuración sin corregir la saturación. En CP09, la acción aplicada en el segundo intervalo recuperó las solicitudes de ese minuto. CP11 mantuvo el 100\,\% de disponibilidad, con 365,6 ms de latencia media por la demora externa. En CP08 el agente activó la caché aunque la capacidad fija ya cumplía los objetivos: la proyección con 15\,\% más de carga indicaba riesgo ante las ráfagas, y la cobertura elevó el cierre de USD 248,40 a USD 262,80.
 
-El agente muestra cómo responder a un pico sin sostener capacidad ociosa y cómo conservar presupuesto cuando el servicio tiene margen de reducción. Los resultados dependen de una simulación con cambios inmediatos, tarifas sintéticas, un horizonte corto y una estimación fija de caché. Las alertas quedan en registros locales. Una evaluación operativa necesitaría incorporar la tasa real de aciertos de caché, tiempos de aprovisionamiento, tarifas verificadas y ventanas representativas. La implantación comenzaría en modo sombra y avanzaría hacia cambios acotados tras comprobar los objetivos con telemetría del proveedor.
+El agente muestra cómo responder a un pico sin sostener capacidad ociosa y cómo conservar presupuesto cuando el servicio tiene margen de reducción. Los resultados dependen de una simulación con cambios inmediatos, tarifas sintéticas, un horizonte corto y una estimación fija de caché. El prototipo solo aumenta el nivel de la BD; reducirlo requeriría una ventana de estabilización más larga, porque en servicios gestionados ese cambio suele implicar una interrupción breve. Las alertas quedan en registros locales. Una evaluación operativa necesitaría incorporar la tasa real de aciertos de caché, tiempos de aprovisionamiento, tarifas verificadas y ventanas representativas. La implantación comenzaría en modo sombra y avanzaría hacia cambios acotados tras comprobar los objetivos con telemetría del proveedor.
 
 \niveldos{Reproducción}
-El repositorio ejecuta las pruebas y guarda \texttt{metricas.csv}, \texttt{resumen.json} y \texttt{traza.jsonl} en \texttt{evidencia/}. En Windows se ejecuta \texttt{desplegar.cmd}. En macOS y Linux se ejecuta \texttt{sh desplegar.sh}. Se requiere Python 3.10 o posterior. La compilación del informe usa XeLaTeX y el diagrama se genera desde su fuente TikZ.
+El repositorio ejecuta las pruebas y guarda \texttt{metricas.csv}, \texttt{resumen.json} y \texttt{traza.jsonl} en \texttt{evidencia/}. En Windows se ejecuta \texttt{desplegar.cmd}. En macOS y Linux se ejecuta \texttt{sh desplegar.sh}. Se requiere Python 3.10 o posterior. La compilación del informe usa XeLaTeX y el diagrama se genera desde su fuente TikZ. El código está disponible en \url{https://github.com/David3560/Proyecto_2_FinOps}.
 
 \newpage
 \niveluno{Referencias}
 
 \entrada{FinOps Foundation. (s. f.). \textit{FinOps framework}. \url{https://www.finops.org/framework/}}
-\entrada{Jones, C., Wilkes, J., Murphy, N. R., \& Smith, C. (2016). Service level objectives. En B. Beyer, C. Jones, J. Petoff, \& N. R. Murphy (Eds.), \textit{Site reliability engineering: How Google runs production systems}. O’Reilly Media. \url{https://sre.google/sre-book/service-level-objectives/}}
-\entrada{Kubernetes. (s. f.). \textit{Horizontal pod autoscaling}. \url{https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/}}
-\entrada{Russell, S. J., \& Norvig, P. (2021). \textit{Artificial intelligence: A modern approach} (4.ª ed.). Pearson.}
-\entrada{\textit{Taller de ingeniería de agentes inteligentes: De los fundamentos a los sistemas multi-agente}. (2026, noviembre). [Guía de la actividad].}
+\entrada{Jones, C., Wilkes, J., Murphy, N. R. y Smith, C. (2016). Service level objectives. En B. Beyer, C. Jones, J. Petoff y N. R. Murphy (Eds.), \textit{Site reliability engineering: How Google runs production systems}. O’Reilly Media. \url{https://sre.google/sre-book/service-level-objectives/}}
+\entrada{The Kubernetes Authors. (s. f.). \textit{Horizontal pod autoscaling}. \url{https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/}}
+\entrada{Russell, S. J. y Norvig, P. (2021). \textit{Artificial intelligence: A modern approach} (4.ª ed.). Pearson.}
+\entrada{\textit{Taller de ingeniería de agentes inteligentes: De los fundamentos a los sistemas multiagente} [Guía de actividad]. (2026, noviembre). Fundación Universitaria Los Libertadores.}
 \end{document}
